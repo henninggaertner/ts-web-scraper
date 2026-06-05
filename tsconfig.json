@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    // --- What JS to emit ---
+    "target": "es2023",                // modern Node 22 supports this fully
+    "module": "nodenext",              // emit real ESM (package.json has "type": "module")
+    "moduleResolution": "nodenext",    // ESM resolution: RELATIVE imports need an explicit .js extension
+
+    // --- Strictness (the whole point of using TS) ---
+    "strict": true,                    // strictNullChecks, useUnknownInCatchVariables, noImplicitAny, ...
+    "noUncheckedIndexedAccess": true,  // arr[i] becomes T | undefined — forces you to handle "missing"
+    "noFallthroughCasesInSwitch": true,
+
+    // --- Keep the language honest & idiomatic ---
+    "erasableSyntaxOnly": true,        // TS 5.8+. Bans enum / namespace / `import =` / constructor
+                                       //   parameter-properties — i.e. anything that ISN'T just erasable
+                                       //   type syntax. Pushes you toward idiomatic literal unions.
+    "verbatimModuleSyntax": true,      // makes the `import type` vs `import` distinction load-bearing
+
+    // --- Output layout ---
+    "rootDir": "src",
+    "outDir": "dist",
+    "declaration": true,               // also emit .d.ts (we ship a library surface too; lesson lands in M4/M9)
+    "sourceMap": true,
+    "skipLibCheck": true               // don't type-check dependencies' .d.ts — faster, standard practice
+  },
+  "include": ["src/**/*"]
+}
