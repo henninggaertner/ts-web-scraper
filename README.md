@@ -7,3 +7,11 @@ Use interfaces for extensible object shapes and type for unions, intersections a
 
 EnrichedJob is a type, as we first scrape the job listing, then want to store each job listing structured, and in the second phase scrape each jobs details which we can easily append to the EnrichedJob type via the detail property created by the union / intersection with the inline object.
 *A note on composition:* One important design pattern is composition of objects. Instead of extending interface a with interface b, just create a new type c which unions their objects together. This is cleaner.
+
+## M2
+
+### enum vs union
+
+ Enums carry runtime overhead while unions are clean and only exist at compiletime. They also don't require cumbersome syntax to access.
+
+ 

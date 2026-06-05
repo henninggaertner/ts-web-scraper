@@ -36,3 +36,8 @@ export class ParseError extends ScrapeError {
     }
 
 }
+
+export function toMessage(e: unknown): string {
+    const message =  e instanceof Error ? e.message : String(e);
+    return message;
+}

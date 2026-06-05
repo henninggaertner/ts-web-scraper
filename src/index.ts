@@ -1,18 +1,21 @@
-// M0 MENTOR DEMO — the entry point.
-//
-// Note the import path ends in ".js", even though the file on disk is "log.ts".
-// Under ESM ("type": "module" + moduleResolution: nodenext), you import the path of the
-// EMITTED file (log.js), not the source (log.ts). This trips up almost everyone coming
-// from Python/Node-CJS. TypeScript checks `./log.js` against `src/log.ts` for you.
-import { log } from "./log.js";
-import { FetchError, ParseError, ScrapeError } from  "./errors.js";
+// src/index.ts
+// M2 MENTOR DEMO — our first real fetch, top-level await, and `unknown` in a catch.
+// (The M0 throw-demo lived here; it did its job. errors.ts stays and gets used for
+//  real in M5. In M8 this entry point splits into a proper cli.ts.)
+import { fetchPage } from "./net/fetchPage.js";
 
-const err = new FetchError("Failed to retrieve page content", "sap.jobs.com", 404);
-if (err instanceof ScrapeError){
-    throw (err);
+const SEARCH_URL = "https://jobs.sap.com/search/?q=&locationsearch=Berlin+Potsdam";
 
+// Top-level await is allowed in ESM — no wrapper function needed.
+try {
+  const html = await fetchPage(SEARCH_URL);
+  const preview = html.slice(0, 80).replace(/\s+/g, " ");
+  console.log(`first 80 chars: ${preview}`);
+} catch (e: unknown) {
+  // STRICT MODE TYPES `e` AS `unknown`, not `any`. You literally cannot touch it
+  // until you prove what it is — because you don't actually know what was thrown
+  // (JS lets you `throw` anything: an Error, a string, a number, undefined...).
+  // Narrow first, then use:
+  const message = e instanceof Error ? e.message : String(e);
+  console.error(`fetch failed: ${message}`);
 }
-
-
-log("SAP jobs scraper — M0 build works.", { level: "info", withTimestamp: true });
-log("Types are a compile-time fiction; the emitted JS carries none of them.", { level: "info" });
