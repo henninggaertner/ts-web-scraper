@@ -41,16 +41,13 @@ export function parseSearchPage(html: string): JobListing[] {
 
   $(".data-row").each((_i, row) => {
     const $row = $(row);
-    // DIY — fill this in, then `listings.push(...)`:
-    //   const $link = $row.find("a.jobTitle-link").first();
-    //        ^ .first() is REQUIRED: each row carries phone + desktop COPIES of the link,
-    //          so a naive .find() double-counts (50 links across 25 rows). Real-world HTML mess.
-    //   const href = $link.attr("href");          // string | undefined
-    //   const parsed = parseJobHref(href);
-    //   if (parsed === null) return;              // skip a junk row (return == "continue" inside .each)
-    //   const title = $link.text().trim();        // .text() returns string, ALREADY entity-decoded
-    //   const location = $row.find(".jobLocation").first().text().trim();
-    //   listings.push({ title, location, detailUrl: parsed.detailUrl, jobId: parsed.jobId });
+    const $link = $row.find("a.jobTitle-link").first();
+    const href = $link.attr("href");
+    const parsed = parseJobHref(href);
+    if (parsed == null) return;
+    const title = $link.text().trim();
+    const location = $row.find(".jobLocation").first().text().trim();
+    listings.push({title, location, detailUrl: parsed.detailUrl, jobId: parsed.jobId })
   });
 
   return listings;
