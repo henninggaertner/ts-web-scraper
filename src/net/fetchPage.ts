@@ -1,6 +1,7 @@
 // src/net/fetchPage.ts
 // M2 MENTOR DEMO — async/await and Promise<T>.
-
+import { type Result, ok, err } from "../models/result.js";
+import { FetchError } from "../errors.js";
 /**
  * Fetch a page and return its raw HTML.
  *
@@ -10,14 +11,17 @@
  * from TypeScript's built-in DOM lib — in M5 we'll switch the project over to
  * proper Node typings and explain why.
  */
-export async function fetchPage(url: string): Promise<string> {
+export async function fetchPage(url: string): Promise<Result<string, FetchError>> {
   const res = await fetch(url, {
     // A descriptive User-Agent is polite (it identifies us) and pragmatic
     // (some sites reject the default bare client). M5 makes this rigorous.
     headers: { "user-agent": "sap-jobs-scraper/0.1 (learning project)" },
   });
+  if (!res.ok) {
+    return err(new FetchError('Failed to fetch', url, res.status))
+  }
   console.log(`GET ${url} -> ${res.status} ${res.statusText}`);
   const html = await res.text(); // `res.text()` is itself a Promise<string> — await it
   console.log(`  received ${html.length} bytes`);
-  return html;
+  return ok(html)
 }

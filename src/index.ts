@@ -8,9 +8,13 @@ const SEARCH_URL = "https://jobs.sap.com/search/?q=&locationsearch=Berlin+Potsda
 
 // Top-level await is allowed in ESM — no wrapper function needed.
 try {
-  const html = await fetchPage(SEARCH_URL);
-  const preview = html.slice(0, 80).replace(/\s+/g, " ");
-  console.log(`first 80 chars: ${preview}`);
+  const result = await fetchPage(SEARCH_URL);
+  if (result.ok) {
+    const preview = result.value.slice(0, 80).replace(/\s+/g, " ");
+    console.log(`first 80 chars: ${preview}`);
+  } else {
+    console.error(result.error.message);
+  }
 } catch (e: unknown) {
   // STRICT MODE TYPES `e` AS `unknown`, not `any`. You literally cannot touch it
   // until you prove what it is — because you don't actually know what was thrown
