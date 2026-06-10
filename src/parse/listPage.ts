@@ -52,3 +52,13 @@ export function parseSearchPage(html: string): JobListing[] {
 
   return listings;
 }
+
+export function parsePaginationCount(html: string): number|null {
+  const $: CheerioAPI = cheerio.load(html);
+  const pagination_string = $(".paginationLabel").first().text();
+  const match = /of\ (\d+)/.exec(pagination_string);
+  const total = match?.[1];
+  if (total === undefined) return null;
+  return Number(total);
+
+}
